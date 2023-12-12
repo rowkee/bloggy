@@ -1,0 +1,24 @@
+<div class="author">
+  <h1 class="author__heading">Hi, I'm Ricky</h1>
+  <p class="author__body">Web dev and content creator</p>
+</div>
+
+<img src="" alt="" class />
+
+<section class="articles">
+  <h2 class="articles__heading">Latest posts</h2>
+  <hr />
+
+  <ul class="article-ul">
+    <% data.forEach(cheese => { %>
+    <li>
+      <a href="/post/<%=cheese._id%>">
+        <span><%= cheese.title %></span>
+        <span class="article-list__date"
+          ><%= cheese.createdAt.toDateString() %></span
+        >
+      </a>
+    </li>
+    <% }) %>
+  </ul>
+</section>
