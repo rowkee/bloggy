@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 
-// Routes
+//! Routes
+//* Get's all blog posts
+
 router.get("", async (req, res) => {
   const locals = {
     title: "Mr Bloggy",
@@ -17,6 +19,8 @@ router.get("", async (req, res) => {
     console.log(error);
   }
 });
+
+//* Get's a particular blog post
 
 router.get("/post/:id", async (req, res) => {
   try {
@@ -37,7 +41,31 @@ router.get("/about", (req, res) => {
   res.render("about");
 });
 
-module.exports = router;
+//* Search Route
+
+router.post("/search", async (req, res) => {
+  try {
+    const locals = {
+      title: "Search",
+      description:
+        "The ramblings of content you can find funnier Dilbert cartoons for.",
+    };
+
+    let searchTerm = req.body.searchTerm;
+    const searchNoSpecialCharacters = searchTerm.replace(/[^a-zA-Z0-9 ]/g, "");
+    console.log(searchTerm);
+
+    const data = await Post.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialCharacters, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialCharacters, "i") } },
+      ],
+    });
+    res.render("search", { data, locals });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 //! Used this function to add some dummy data
 // function insertPostData() {
@@ -93,3 +121,5 @@ module.exports = router;
 //   ]);
 // }
 // // insertPostData();
+
+module.exports = router;

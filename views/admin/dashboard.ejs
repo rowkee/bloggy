@@ -1,0 +1,12 @@
+<div class="admin-title">
+  <h2>Posts</h2>
+  <a href="/add-post" class="btn">Add New</a>
+</div>
+
+<ul class="admin-post">
+  <% data.forEach(cheese => { %>
+  <li>
+    <a href="/post/<%= cheese._id %>"> <%= cheese.title %> &nearr; </a>
+  </li>
+  <% }) %>
+</ul>
