@@ -93,7 +93,23 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
       description:
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
-    res.render("admin/dashboard", { locals, data });
+    res.render("admin/dashboard", { locals, data, layout: adminLayout });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// CREATE A NEW POST
+
+router.get("/add-post", authMiddleware, async (req, res) => {
+  try {
+    const data = await Post.find();
+    const locals = {
+      title: "Add Post",
+      description:
+        "The ramblings of content you can find funnier Dilbert cartoons for.",
+    };
+    res.render("admin/add-post", { locals, data, layout: adminLayout });
   } catch (error) {
     console.log(error);
   }
