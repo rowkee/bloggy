@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = "../views/layouts/admin";
 
-// Checked if logged in
+// DIY middleware that checks if anyone is logged in, can be reused for each route
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
@@ -24,7 +24,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// This GETS the  admin LOGIN PAGE
+// This GETS the  admin LOGIN PAGE to display it
 router.get("/admin", async (req, res) => {
   try {
     const locals = {
@@ -38,7 +38,7 @@ router.get("/admin", async (req, res) => {
   }
 });
 
-//This POSTS the REGISTERATION info for sign up
+//This POSTS the REGISTERATION info for signing up admin users (hidden in frontend)
 
 router.post("/register", async (req, res) => {
   try {
@@ -60,7 +60,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-//This POSTS the to SIGN IN
+//This POSTS the data to SIGN IN an admin user
 
 router.post("/admin", async (req, res) => {
   try {
@@ -83,7 +83,7 @@ router.post("/admin", async (req, res) => {
 
 module.exports = router;
 
-// This GETS the admin dashboard
+// This GETS the admin dashboard to display it
 
 router.get("/dashboard", authMiddleware, async (req, res) => {
   try {
@@ -99,7 +99,7 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
   }
 });
 
-// CREATE A NEW POST
+// This GETS the new post form to display it
 
 router.get("/add-post", authMiddleware, async (req, res) => {
   try {
@@ -110,6 +110,25 @@ router.get("/add-post", authMiddleware, async (req, res) => {
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
     res.render("admin/add-post", { locals, data, layout: adminLayout });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// This POSTS the content of a new blog post to display
+
+router.post("/add-post", authMiddleware, async (req, res) => {
+  try {
+    try {
+      const newPost = new Post({
+        title: req.body.title,
+        body: req.body.body,
+      });
+      await Post.create(newPost);
+      res.redirect("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   } catch (error) {
     console.log(error);
   }
