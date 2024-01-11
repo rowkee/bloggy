@@ -88,12 +88,22 @@ module.exports = router;
 router.get("/dashboard", authMiddleware, async (req, res) => {
   try {
     const data = await Post.find();
+    const updatedData = data.map((post) => {
+      return {
+        ...post.toObject(),
+        _id: post._id.toString(),
+      };
+    });
     const locals = {
-      title: "Dasbhoard",
+      title: "Dashboard",
       description:
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
-    res.render("admin/dashboard", { locals, data, layout: adminLayout });
+    res.render("admin/dashboard", {
+      locals,
+      updatedData,
+      layout: adminLayout,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -104,12 +114,18 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
 router.get("/add-post", authMiddleware, async (req, res) => {
   try {
     const data = await Post.find();
+    const updatedData = data.map((post) => {
+      return {
+        ...post.toObject(), // Convert Mongoose document to a plain JavaScript object
+        _id: post._id.toString(), // Convert _id to string
+      };
+    });
     const locals = {
       title: "Add Post",
       description:
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
-    res.render("admin/add-post", { locals, data, layout: adminLayout });
+    res.render("admin/add-post", { locals, updatedData, layout: adminLayout });
   } catch (error) {
     console.log(error);
   }
@@ -144,6 +160,7 @@ router.get("/edit-post/:id", authMiddleware, async (req, res) => {
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
     const data = await Post.findOne({ _id: req.params.id });
+    // console.log(data);
     res.render("admin/edit-post", {
       locals,
       data,
@@ -162,7 +179,7 @@ router.put("/edit-post/:id", authMiddleware, async (req, res) => {
       body: req.body.body,
       updatedAt: Date.now(),
     });
-
+    console.log(req.params.id);
     res.redirect(`/edit-post/${req.params.id}`);
   } catch (error) {
     console.log(error);
