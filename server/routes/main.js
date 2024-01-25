@@ -14,7 +14,7 @@ router.get("", async (req, res) => {
 
   try {
     const data = await Post.find();
-    res.render("index", { locals, data });
+    res.render("index", { locals, data, currentRoute: "/" });
   } catch (error) {
     console.log(error);
   }
@@ -31,14 +31,14 @@ router.get("/post/:id", async (req, res) => {
       description:
         "The ramblings of content you can find funnier Dilbert cartoons for.",
     };
-    res.render("post", { post, locals });
+    res.render("post", { post, locals, currentRoute: `/post/${slug}` });
   } catch (error) {
     console.log(error);
   }
 });
 
 router.get("/about", (req, res) => {
-  res.render("about");
+  res.render("about", { currentRoute: "/about" });
 });
 
 //* Search Route
@@ -61,7 +61,7 @@ router.post("/search", async (req, res) => {
         { body: { $regex: new RegExp(searchNoSpecialCharacters, "i") } },
       ],
     });
-    res.render("search", { data, locals });
+    res.render("search", { data, locals, currentRoute: "/search" });
   } catch (error) {
     console.log(error);
   }

@@ -7,11 +7,13 @@ const expressLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const helmet = require("helmet");
 
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
 const connectDB = require("./server/config/db.js");
+const { isActiveRoute } = require("./server/helpers/routeHelpers.js");
 
 // Connect to Databse
 connectDB();
@@ -40,9 +42,21 @@ app.use(expressLayout);
 app.set("layout", "./layouts/main");
 app.set("view engine", "ejs");
 
+app.locals.isActiveRoute = isActiveRoute;
+
 app.use("/", require("./server/routes/main.js"));
 app.use("/", require("./server/routes/admin.js"));
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
+
+// Security
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  })
+);
