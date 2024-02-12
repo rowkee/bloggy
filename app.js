@@ -6,7 +6,7 @@ const methodOverride = require("method-override");
 const expressLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const MongoStore = require("connect-mongo").default;
+const MongoStore = require("connect-mongo");
 const helmet = require("helmet");
 
 const app = express();
@@ -31,7 +31,6 @@ app.use(
     saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_DB_URI,
-      ...options,
     }),
   })
 );
