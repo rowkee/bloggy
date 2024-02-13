@@ -6,7 +6,10 @@ const methodOverride = require("method-override");
 const expressLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
+const dbString = process.env.MONGO_DB_URI;
+const connection = mongoose.createConnection(dbString);
 const helmet = require("helmet");
 
 const app = express();
@@ -14,6 +17,11 @@ const PORT = 3000 || process.env.PORT;
 
 const connectDB = require("./server/config/db.js");
 const { isActiveRoute } = require("./server/helpers/routeHelpers.js");
+
+const sessionStore = MongoStore.create({
+  client: connection.getClient(),
+  collection: "session",
+});
 
 // Connect to Databse
 connectDB();
@@ -29,9 +37,7 @@ app.use(
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_DB_URI,
-    }),
+    store: sessionStore,
   })
 );
 
