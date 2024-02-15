@@ -6,11 +6,14 @@ const methodOverride = require("method-override");
 const expressLayout = require("express-ejs-layouts");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 // const dbString = process.env.MONGO_DB_URI;
 // const connection = mongoose.createConnection(process.env.MONGO_DB_URI);
 const helmet = require("helmet");
+
+const MongoClient = require("mongodb").MongoClient;
+const clientPromise = MongoClient.connect(process.env.MONGO_DB_URI);
 
 const app = express();
 const PORT = 3000 || process.env.PORT;
@@ -28,7 +31,7 @@ connectDB();
 
 app.use(
   session({
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_URI }),
+    store: MongoStore.create({ clientPromise }),
     secret: "keyboard cat",
     resave: false,
     saveUninitialized: false,
