@@ -9,7 +9,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 // const dbString = process.env.MONGO_DB_URI;
-const connection = mongoose.createConnection(MONGO_DB_URI);
+const connection = mongoose.createConnection(process.env.MONGO_DB_URI);
 const helmet = require("helmet");
 
 const app = express();
