@@ -9,37 +9,37 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
 // const dbString = process.env.MONGO_DB_URI;
-const connection = mongoose.createConnection(process.env.MONGO_DB_URI);
+// const connection = mongoose.createConnection(process.env.MONGO_DB_URI);
 const helmet = require("helmet");
 
 const app = express();
 const PORT = 3000 || process.env.PORT;
 
+// Connect to Databse
 const connectDB = require("./server/config/db.js");
 const { isActiveRoute } = require("./server/helpers/routeHelpers.js");
 
-const sessionStore = MongoStore.create({
-  client: connection.getClient(),
-  collection: "session",
-});
+// const sessionStore = MongoStore.create({
+//   client: connection.getClient(),
+//   collection: "session",
+// });
 
-// Connect to Databse
 connectDB();
+
+app.use(
+  session({
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_DB_URI }),
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(methodOverride("_method"));
-
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore,
-  })
-);
 
 app.use(express.static("public"));
 
