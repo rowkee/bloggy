@@ -15,8 +15,8 @@ const helmet = require("helmet");
 const MongoClient = require("mongodb").MongoClient;
 const clientPromise = MongoClient.connect(process.env.MONGO_DB_URI);
 
+const PORT = process.env.PORT || 3000;
 const app = express();
-const PORT = 3000 || process.env.PORT;
 
 // Connect to Databse
 const connectDB = require("./server/config/db.js");
@@ -56,7 +56,7 @@ app.locals.isActiveRoute = isActiveRoute;
 app.use("/", require("./server/routes/main.js"));
 app.use("/", require("./server/routes/admin.js"));
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`App listening on port ${PORT}`);
 });
 
